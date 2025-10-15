@@ -15,7 +15,7 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -27,15 +27,145 @@
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 
-  <!-- =======================================================
-  * Template Name: DevFolio
-  * Template URL: https://bootstrapmade.com/devfolio-bootstrap-portfolio-html-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+  <style>
+    /* Keep original smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    /* Header / nav baseline */
+    .navmenu a {
+      color: #fff;
+      font-weight: 600;
+      text-shadow: 0 0 10px #00f5d4;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+    .navmenu a:hover,
+    .navmenu a.active {
+      color: #00f5d4;
+      text-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
+    }
+
+    /* ====== MOBILE SIDEBAR MENU (CSS ONLY) ====== */
+    /* Hidden checkbox toggle */
+    #menu-toggle { display: none; }
+
+    /* Hamburger label (visible on mobile) */
+    .hamburger {
+      display: none; /* shown only on small screens via media query */
+      cursor: pointer;
+      font-size: 1.8rem;
+      color: #00f5d4;
+      z-index: 1100;
+      user-select: none;
+    }
+
+    /* General UL layout for desktop */
+    .navmenu > ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+
+    /* Sidebar specifics for small screens */
+    @media (max-width: 992px) {
+      /* show hamburger */
+      .hamburger { display: block; }
+
+      /* hide default desktop ul visually (we will transform into fixed sidebar) */
+      .navmenu > ul {
+        flex-direction: column;
+        align-items: flex-start;
+        position: fixed;
+        top: 0;
+        right: -100%; /* hidden by default */
+        width: 86%; /* responsive width */
+        max-width: 360px;
+        height: 100vh;
+        background: rgba(17, 17, 17, 0.98);
+        padding: 90px 28px 30px;
+        transition: right 0.38s cubic-bezier(.2,.9,.2,1);
+        box-shadow: -8px 0 30px rgba(0, 245, 212, 0.18);
+        gap: 18px;
+        border-left: 1px solid rgba(0,245,212,0.08);
+        z-index: 1050;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      /* When checkbox toggled, slide in */
+      #menu-toggle:checked ~ ul {
+        right: 0;
+      }
+
+      /* Make each link easier to tap */
+      .navmenu > ul li {
+        width: 100%;
+      }
+      .navmenu > ul li a {
+        display: block;
+        width: 100%;
+        padding: 12px 6px;
+        font-size: 1.12rem;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+      }
+
+      /* Close button (an accessible label that toggles the same checkbox) */
+      .close-btn {
+        position: fixed;
+        top: 18px;
+        right: -60px; /* hidden off-canvas until menu opens */
+        background: transparent;
+        border: none;
+        font-size: 1.9rem;
+        color: #00f5d4;
+        cursor: pointer;
+        z-index: 1110;
+        transition: right 0.38s cubic-bezier(.2,.9,.2,1);
+        padding: 6px 10px;
+      }
+
+      /* When menu open, bring close button into view */
+      #menu-toggle:checked ~ .close-btn {
+        right: calc( (100% - 86%) / 2 + 18px ); /* positions close button near right edge of header */
+      }
+
+      /* Ensure header content stays above the sidebar when closed but below when open */
+      header { z-index: 1200; }
+      #menu-toggle:checked ~ ul { z-index: 1050; }
+    }
+
+    /* small nicety: clicking any link should visually indicate closing available on mobile
+       We provide an additional label wrapping each nav item for quick close on tap —
+       but we can't wrap anchors with labels, so below: add a transparent overlay label that covers the header area on open to allow clicking it to close. */
+
+    /* overlay to catch clicks and close the menu (only visible when open) */
+    .menu-overlay {
+      display: none;
+    }
+    @media (max-width: 992px) {
+      .menu-overlay {
+        display: block;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 1040;
+        pointer-events: none; /* disabled until menu open */
+        transition: opacity .3s ease;
+        opacity: 0;
+      }
+      /* enable when menu open; use sibling combinator */
+      #menu-toggle:checked ~ .menu-overlay {
+        pointer-events: auto;
+        opacity: 0.6;
+        background: rgba(0,0,0,0.45);
+      }
+    }
+  </style>
 </head>
 
 <body class="index-page">
@@ -48,100 +178,41 @@
   <img src="assets/img/Md.Tanvir Ahmed logo.png" alt="Md.Tanvir Ahmed Logo" style="max-height: 80px;">
 </a>
 
+    <!-- Navigation Menu (CSS-only toggle) -->
+    <nav id="navmenu" class="navmenu" aria-label="Primary">
+      <!-- hidden checkbox toggle -->
+      <input type="checkbox" id="menu-toggle" aria-hidden="true" />
 
+      <!-- hamburger label (clicking toggles checkbox) -->
+      <label for="menu-toggle" class="hamburger d-xl-none" aria-hidden="true" title="Open menu">
+        <i class="bi bi-list" style="font-size:1.6rem;"></i>
+      </label>
 
-    <!-- Navigation Menu -->
-    <nav id="navmenu" class="navmenu">
-      <ul style="list-style:none; display:flex; gap:25px; margin:0; padding:0;">
-        <li><a href="#hero" class="active" style="color:#fff; text-shadow:0 0 10px #00f5d4; font-weight:600;">Home</a></li>
-        <li><a href="#about" style="color:#fff; text-shadow:0 0 10px #ff6f61; font-weight:600;">About</a></li>
-        <li><a href="#services" style="color:#fff; text-shadow:0 0 10px #ffde59; font-weight:600;">What I Do</a></li>
-        <li><a href="#Achievements" style="color:#fff; text-shadow:0 0 10px #4facfe; font-weight:600;">Achievements</a></li>
-        <li><a href="#projects" style="color:#fff; text-shadow:0 0 10px #4facfe; font-weight:600;">Projects</a></li>
-        <li><a href="#contact" style="color:#fff; text-shadow:0 0 10px #00ff94; font-weight:600;">Contact</a></li>
+      <!-- the nav links (this becomes the sidebar on mobile) -->
+      <ul>
+        <li><a href="#hero" class="active">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#services">What I Do</a></li>
+        <li><a href="#Achievements">Achievements</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#contact">Contact</a></li>
       </ul>
-      <i class="mobile-nav-toggle d-xl-none bi bi-list" style="font-size:1.8rem; color:#00f5d4;"></i>
+
+      <!-- close button (also toggles checkbox) -->
+      <label for="menu-toggle" class="close-btn d-xl-none" aria-hidden="true" title="Close menu">
+        <i class="bi bi-x"></i>
+      </label>
     </nav>
 
   </div>
 </header>
 
-<style>
-  html {
-    scroll-behavior: smooth; /* smooth scrolling */
-  }
-
-  /* Mobile Nav Toggle */
-  .mobile-nav-toggle {
-    cursor: pointer;
-    display: none;
-  }
-
-  @media (max-width: 992px) {
-    .navmenu ul {
-      display: none;
-      flex-direction: column;
-      background: #111;
-      position: absolute;
-      top: 70px;
-      right: 20px;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 25px rgba(0, 245, 212, 0.4);
-    }
-    .mobile-nav-toggle {
-      display: block;
-    }
-    .navmenu.active ul {
-      display: flex;
-    }
-  }
-
-  /* Hover neon effect */
-  .navmenu a:hover {
-    color: #00f5d4;
-    text-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
-    transition: all 0.3s ease;
-  }
-
-  .navmenu a.active {
-    color: #00f5d4;
-    text-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
-  }
-</style>
-
-<script>
-  // Mobile nav toggle
-  const mobileToggle = document.querySelector('.mobile-nav-toggle');
-  const navMenu = document.querySelector('#navmenu');
-
-  mobileToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-  });
-</script>
+<!-- overlay used to close menu when clicking outside -->
+<label for="menu-toggle" class="menu-overlay" aria-hidden="true"></label>
 
   <main class="main">
 
     <!-- Hero Section -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
 <section id="hero" class="hero section dark-background" style="position: relative; overflow: hidden; height: 100vh;">
 
   <!-- Hero Image -->
@@ -180,75 +251,23 @@
   </div>
 </section>
 
-<!-- Styles -->
+<!-- Styles reused for blobs + typed -->
 <style>
 @keyframes slideIn {
   0% { transform: translateY(-50px); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
 }
-
-/* Blob container */
-.blob-container {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* Curvaceous blob base */
-.blob {
-  position: absolute;
-  width: 200%;
-  height: 200%;
-  background: rgba(0, 245, 212, 0.05);
-  border-radius: 45% 55% 55% 45%;
-  animation: blobMove 20s infinite ease-in-out;
-}
-
-/* Different blobs with colors and offsets */
-.blob1 {
-  top: -50%; left: -50%;
-  background: rgba(0, 245, 212, 0.05);
-  animation-duration: 22s;
-}
-
-.blob2 {
-  top: -30%; left: 20%;
-  background: rgba(255, 111, 97, 0.05);
-  border-radius: 55% 45% 45% 55%;
-  animation-duration: 28s;
-}
-
-.blob3 {
-  top: 10%; left: -20%;
-  background: rgba(76, 201, 240, 0.05);
-  border-radius: 50% 50% 60% 40%;
-  animation-duration: 25s;
-}
-
-/* Blob animation */
+.blob-container { position: absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:1; }
+.blob { position:absolute; width:200%; height:200%; background: rgba(0,245,212,0.05); border-radius:45% 55% 55% 45%; animation: blobMove 20s infinite ease-in-out; }
+.blob1 { top:-50%; left:-50%; background: rgba(0,245,212,0.05); animation-duration:22s; }
+.blob2 { top:-30%; left:20%; background: rgba(255,111,97,0.05); border-radius:55% 45% 45% 55%; animation-duration:28s; }
+.blob3 { top:10%; left:-20%; background: rgba(76,201,240,0.05); border-radius:50% 50% 60% 40%; animation-duration:25s; }
 @keyframes blobMove {
-  0% {
-    transform: translate(0,0) scale(1) rotate(0deg);
-    border-radius: 45% 55% 55% 45%;
-  }
-  25% {
-    transform: translate(30px, -30px) scale(1.05) rotate(3deg);
-    border-radius: 50% 50% 60% 40%;
-  }
-  50% {
-    transform: translate(-20px, 20px) scale(1) rotate(-3deg);
-    border-radius: 55% 45% 45% 55%;
-  }
-  75% {
-    transform: translate(25px, -25px) scale(1.05) rotate(2deg);
-    border-radius: 40% 60% 50% 50%;
-  }
-  100% {
-    transform: translate(0,0) scale(1) rotate(0deg);
-    border-radius: 45% 55% 55% 45%;
-  }
+  0% { transform: translate(0,0) scale(1) rotate(0deg); border-radius:45% 55% 55% 45%; }
+  25% { transform: translate(30px,-30px) scale(1.05) rotate(3deg); border-radius:50% 50% 60% 40%; }
+  50% { transform: translate(-20px,20px) scale(1) rotate(-3deg); border-radius:55% 45% 45% 55%; }
+  75% { transform: translate(25px,-25px) scale(1.05) rotate(2deg); border-radius:40% 60% 50% 50%; }
+  100% { transform: translate(0,0) scale(1) rotate(0deg); border-radius:45% 55% 55% 45%; }
 }
 </style>
 
@@ -267,13 +286,16 @@ document.addEventListener('DOMContentLoaded', function() {
     backDelay: 2000,
     startDelay: 500,
     loop: true,
-    loopCount: Infinity,
     showCursor: true,
-    cursorChar: '|',
-    smartBackspace: true
+    cursorChar: '|'
   });
 });
 </script>
+
+</body>
+</html>
+
+
 
 
 
