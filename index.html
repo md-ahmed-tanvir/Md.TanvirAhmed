@@ -15,7 +15,9 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -30,10 +32,17 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
   <style>
-    /* Keep original smooth scroll */
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-    /* Header / nav baseline */
+    /* Navbar styling */
+    #header {
+      background: #000;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
     .navmenu a {
       color: #fff;
       font-weight: 600;
@@ -41,128 +50,53 @@
       transition: all 0.3s ease;
       text-decoration: none;
     }
+
     .navmenu a:hover,
     .navmenu a.active {
       color: #00f5d4;
       text-shadow: 0 0 15px #00f5d4, 0 0 25px #00f5d4;
     }
 
-    /* ====== MOBILE SIDEBAR MENU (CSS ONLY) ====== */
-    /* Hidden checkbox toggle */
-    #menu-toggle { display: none; }
-
-    /* Hamburger label (visible on mobile) */
-    .hamburger {
-      display: none; /* shown only on small screens via media query */
-      cursor: pointer;
-      font-size: 1.8rem;
-      color: #00f5d4;
-      z-index: 1100;
-      user-select: none;
-    }
-
-    /* General UL layout for desktop */
-    .navmenu > ul {
+    .navmenu ul {
       list-style: none;
-      display: flex;
-      gap: 25px;
       margin: 0;
       padding: 0;
+      display: flex;
+      gap: 25px;
       align-items: center;
     }
 
-    /* Sidebar specifics for small screens */
-    @media (max-width: 992px) {
-      /* show hamburger */
-      .hamburger { display: block; }
-
-      /* hide default desktop ul visually (we will transform into fixed sidebar) */
-      .navmenu > ul {
-        flex-direction: column;
-        align-items: flex-start;
-        position: fixed;
-        top: 0;
-        right: -100%; /* hidden by default */
-        width: 86%; /* responsive width */
-        max-width: 360px;
-        height: 100vh;
-        background: rgba(17, 17, 17, 0.98);
-        padding: 90px 28px 30px;
-        transition: right 0.38s cubic-bezier(.2,.9,.2,1);
-        box-shadow: -8px 0 30px rgba(0, 245, 212, 0.18);
-        gap: 18px;
-        border-left: 1px solid rgba(0,245,212,0.08);
-        z-index: 1050;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      /* When checkbox toggled, slide in */
-      #menu-toggle:checked ~ ul {
-        right: 0;
-      }
-
-      /* Make each link easier to tap */
-      .navmenu > ul li {
-        width: 100%;
-      }
-      .navmenu > ul li a {
-        display: block;
-        width: 100%;
-        padding: 12px 6px;
-        font-size: 1.12rem;
-        border-bottom: 1px solid rgba(255,255,255,0.04);
-      }
-
-      /* Close button (an accessible label that toggles the same checkbox) */
-      .close-btn {
-        position: fixed;
-        top: 18px;
-        right: -60px; /* hidden off-canvas until menu opens */
-        background: transparent;
-        border: none;
-        font-size: 1.9rem;
-        color: #00f5d4;
-        cursor: pointer;
-        z-index: 1110;
-        transition: right 0.38s cubic-bezier(.2,.9,.2,1);
-        padding: 6px 10px;
-      }
-
-      /* When menu open, bring close button into view */
-      #menu-toggle:checked ~ .close-btn {
-        right: calc( (100% - 86%) / 2 + 18px ); /* positions close button near right edge of header */
-      }
-
-      /* Ensure header content stays above the sidebar when closed but below when open */
-      header { z-index: 1200; }
-      #menu-toggle:checked ~ ul { z-index: 1050; }
-    }
-
-    /* small nicety: clicking any link should visually indicate closing available on mobile
-       We provide an additional label wrapping each nav item for quick close on tap —
-       but we can't wrap anchors with labels, so below: add a transparent overlay label that covers the header area on open to allow clicking it to close. */
-
-    /* overlay to catch clicks and close the menu (only visible when open) */
-    .menu-overlay {
+    .mobile-nav-toggle {
+      color: #00f5d4;
+      font-size: 1.8rem;
+      cursor: pointer;
       display: none;
     }
-    @media (max-width: 992px) {
-      .menu-overlay {
-        display: block;
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 1040;
-        pointer-events: none; /* disabled until menu open */
-        transition: opacity .3s ease;
-        opacity: 0;
+
+    @media (max-width: 991px) {
+      .navmenu ul {
+        display: none;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.95);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 20px 0;
+        text-align: center;
       }
-      /* enable when menu open; use sibling combinator */
-      #menu-toggle:checked ~ .menu-overlay {
-        pointer-events: auto;
-        opacity: 0.6;
-        background: rgba(0,0,0,0.45);
+
+      .navmenu ul.active {
+        display: flex;
+      }
+
+      .mobile-nav-toggle {
+        display: block;
+      }
+
+      .navmenu a {
+        display: block;
+        padding: 12px 0;
       }
     }
   </style>
@@ -170,127 +104,185 @@
 
 <body class="index-page">
 
- <header id="header" class="header d-flex align-items-center sticky-top" style="background:#000; box-shadow:0 2px 15px rgba(0,0,0,0.5); z-index:999;">
-  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
- <!-- Logo -->
-<a href="#hero" class="logo d-flex align-items-center">
-  <img src="assets/img/Md.Tanvir Ahmed logo.png" alt="Md.Tanvir Ahmed Logo" style="max-height: 80px;">
-</a>
+      <!-- Logo -->
+      <a href="#hero" class="logo d-flex align-items-center">
+        <img src="assets/img/Md.Tanvir Ahmed logo.png" alt="Md.Tanvir Ahmed Logo" style="max-height: 80px;">
+      </a>
 
-    <!-- Navigation Menu (CSS-only toggle) -->
-    <nav id="navmenu" class="navmenu" aria-label="Primary">
-      <!-- hidden checkbox toggle -->
-      <input type="checkbox" id="menu-toggle" aria-hidden="true" />
+      <!-- Simplified Navbar -->
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero" class="active">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">What I Do</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
 
-      <!-- hamburger label (clicking toggles checkbox) -->
-      <label for="menu-toggle" class="hamburger d-xl-none" aria-hidden="true" title="Open menu">
-        <i class="bi bi-list" style="font-size:1.6rem;"></i>
-      </label>
-
-      <!-- the nav links (this becomes the sidebar on mobile) -->
-      <ul>
-        <li><a href="#hero" class="active">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#services">What I Do</a></li>
-        <li><a href="#Achievements">Achievements</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-
-      <!-- close button (also toggles checkbox) -->
-      <label for="menu-toggle" class="close-btn d-xl-none" aria-hidden="true" title="Close menu">
-        <i class="bi bi-x"></i>
-      </label>
-    </nav>
-
-  </div>
-</header>
-
-<!-- overlay used to close menu when clicking outside -->
-<label for="menu-toggle" class="menu-overlay" aria-hidden="true"></label>
+    </div>
+  </header>
 
   <main class="main">
 
     <!-- Hero Section -->
-<section id="hero" class="hero section dark-background" style="position: relative; overflow: hidden; height: 100vh;">
+    <section id="hero" class="hero section dark-background" style="position: relative; overflow: hidden; height: 100vh;">
 
-  <!-- Hero Image -->
-  <img src="assets/img/hero-img.jpg" alt="" 
-       style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:0;"/>
+      <!-- Hero Image -->
+      <img src="assets/img/hero-img.jpg" alt=""
+        style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:0;" />
 
-  <!-- Curvaceous Waves/Blobs -->
-  <div class="blob-container">
-    <div class="blob blob1"></div>
-    <div class="blob blob2"></div>
-    <div class="blob blob3"></div>
-  </div>
+      <!-- Animated Blobs -->
+      <div class="blob-container">
+        <div class="blob blob1"></div>
+        <div class="blob blob2"></div>
+        <div class="blob blob3"></div>
+      </div>
 
-  <!-- Text Container -->
-  <div class="container d-flex flex-column align-items-center justify-content-center text-center" 
-       style="position: relative; z-index: 2; height:100%;">
+      <!-- Hero Text -->
+      <div class="container d-flex flex-column align-items-center justify-content-center text-center"
+        style="position: relative; z-index: 2; height:100%;">
 
-    <!-- Stylish Rounded Background with Glow -->
-    <div style="
-        position: relative;
-        background: rgba(0, 0, 0, 0.6); 
-        padding: 30px 50px; 
-        border-radius: 50px; 
-        box-shadow: 0 0 20px rgba(255,255,255,0.3), 0 8px 30px rgba(0,0,0,0.5);
+        <div style="
+          position: relative;
+          background: rgba(0, 0, 0, 0.6); 
+          padding: 30px 50px; 
+          border-radius: 50px; 
+          box-shadow: 0 0 20px rgba(255,255,255,0.3), 0 8px 30px rgba(0,0,0,0.5);
+          overflow: hidden;
+          max-width: 90%;
+          animation: slideIn 1s ease-out forwards;
+      ">
+          <p style="font-size: 25px; color: #fff; margin-bottom: 8px; letter-spacing: 3px;">Hello</p>
+          <h2 style="color: #fff; margin-bottom: 10px;">I am Md. Tanvir Ahmed</h2>
+          <p style="color: #fff; font-size: 18px;">
+            <span id="typed-text"></span>
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Blob and animation styles -->
+    <style>
+      @keyframes slideIn {
+        0% {
+          transform: translateY(-50px);
+          opacity: 0;
+        }
+
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .blob-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
         overflow: hidden;
-        max-width: 90%;
-        animation: slideIn 1s ease-out forwards;
-    ">
-      <p style="font-size: 25px; color: #fff; margin-bottom: 8px; letter-spacing: 3px;">Hello</p>
-      <h2 style="color: #fff; margin-bottom: 10px;">I am Md. Tanvir Ahmed</h2>
-      <p style="color: #fff; font-size: 18px;">
-        <span id="typed-text"></span>
-      </p>
-    </div>
+        z-index: 1;
+      }
 
-  </div>
-</section>
+      .blob {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background: rgba(0, 245, 212, 0.05);
+        border-radius: 45% 55% 55% 45%;
+        animation: blobMove 20s infinite ease-in-out;
+      }
 
-<!-- Styles reused for blobs + typed -->
-<style>
-@keyframes slideIn {
-  0% { transform: translateY(-50px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.blob-container { position: absolute; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:1; }
-.blob { position:absolute; width:200%; height:200%; background: rgba(0,245,212,0.05); border-radius:45% 55% 55% 45%; animation: blobMove 20s infinite ease-in-out; }
-.blob1 { top:-50%; left:-50%; background: rgba(0,245,212,0.05); animation-duration:22s; }
-.blob2 { top:-30%; left:20%; background: rgba(255,111,97,0.05); border-radius:55% 45% 45% 55%; animation-duration:28s; }
-.blob3 { top:10%; left:-20%; background: rgba(76,201,240,0.05); border-radius:50% 50% 60% 40%; animation-duration:25s; }
-@keyframes blobMove {
-  0% { transform: translate(0,0) scale(1) rotate(0deg); border-radius:45% 55% 55% 45%; }
-  25% { transform: translate(30px,-30px) scale(1.05) rotate(3deg); border-radius:50% 50% 60% 40%; }
-  50% { transform: translate(-20px,20px) scale(1) rotate(-3deg); border-radius:55% 45% 45% 55%; }
-  75% { transform: translate(25px,-25px) scale(1.05) rotate(2deg); border-radius:40% 60% 50% 50%; }
-  100% { transform: translate(0,0) scale(1) rotate(0deg); border-radius:45% 55% 55% 45%; }
-}
-</style>
+      .blob1 {
+        top: -50%;
+        left: -50%;
+        background: rgba(0, 245, 212, 0.05);
+        animation-duration: 22s;
+      }
 
-<!-- Typed.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var typed = new Typed('#typed-text', {
-    strings: [
-      "Dedicated Data & BI Analyst 🚀",
-      "Passionate about turning raw data into actionable insights 📊",
-      "Lifelong learner, growing every day in data & analytics 🌱"
-    ],
-    typeSpeed: 100,
-    backSpeed: 100,
-    backDelay: 2000,
-    startDelay: 500,
-    loop: true,
-    showCursor: true,
-    cursorChar: '|'
-  });
-});
-</script>
+      .blob2 {
+        top: -30%;
+        left: 20%;
+        background: rgba(255, 111, 97, 0.05);
+        border-radius: 55% 45% 45% 55%;
+        animation-duration: 28s;
+      }
+
+      .blob3 {
+        top: 10%;
+        left: -20%;
+        background: rgba(76, 201, 240, 0.05);
+        border-radius: 50% 50% 60% 40%;
+        animation-duration: 25s;
+      }
+
+      @keyframes blobMove {
+        0% {
+          transform: translate(0, 0) scale(1) rotate(0deg);
+          border-radius: 45% 55% 55% 45%;
+        }
+
+        25% {
+          transform: translate(30px, -30px) scale(1.05) rotate(3deg);
+          border-radius: 50% 50% 60% 40%;
+        }
+
+        50% {
+          transform: translate(-20px, 20px) scale(1) rotate(-3deg);
+          border-radius: 55% 45% 45% 55%;
+        }
+
+        75% {
+          transform: translate(25px, -25px) scale(1.05) rotate(2deg);
+          border-radius: 40% 60% 50% 50%;
+        }
+
+        100% {
+          transform: translate(0, 0) scale(1) rotate(0deg);
+          border-radius: 45% 55% 55% 45%;
+        }
+      }
+    </style>
+
+  </main>
+
+  <!-- Typed.js and Navbar Toggle Script -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Typed Text Animation
+      var typed = new Typed('#typed-text', {
+        strings: [
+          "Dedicated Data & BI Analyst 🚀",
+          "Passionate about turning raw data into actionable insights 📊",
+          "Lifelong learner, growing every day in data & analytics 🌱"
+        ],
+        typeSpeed: 100,
+        backSpeed: 100,
+        backDelay: 2000,
+        startDelay: 500,
+        loop: true,
+        showCursor: true,
+        cursorChar: '|'
+      });
+
+      // Mobile Navbar Toggle
+      const toggleBtn = document.querySelector('.mobile-nav-toggle');
+      const navList = document.querySelector('#navmenu ul');
+      toggleBtn.addEventListener('click', () => {
+        navList.classList.toggle('active');
+        toggleBtn.classList.toggle('bi-list');
+        toggleBtn.classList.toggle('bi-x');
+      });
+    });
+  </script>
 
 </body>
 </html>
@@ -1136,126 +1128,163 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
  
-   <!-- 🔥 Stylish Dark Services Section -->
-<section id="services" class="services section" style="position: relative; overflow: hidden; background: linear-gradient(135deg, #0a0a0a, #1a1a1a); padding: 80px 0; color: #fff;">
+<!-- 🔥 Dynamic & Animated Services Section -->
+<section id="services" class="services section" style="position: relative; overflow: hidden; background: radial-gradient(circle at 20% 20%, #111 0%, #000 100%); padding: 100px 0; color: #fff;">
 
-  <!-- Floating Glow Circles -->
-  <div style="position:absolute; width:400px; height:400px; background: rgba(76,201,240,0.2); border-radius:50%; filter:blur(150px); top:-100px; left:-50px; animation: float1 8s infinite alternate ease-in-out;"></div>
-  <div style="position:absolute; width:300px; height:300px; background: rgba(67,97,238,0.15); border-radius:50%; filter:blur(120px); bottom:-80px; right:-50px; animation: float2 10s infinite alternate ease-in-out;"></div>
+  <!-- Floating Glow Backgrounds -->
+  <div style="position:absolute; width:500px; height:500px; background: rgba(76,201,240,0.15); border-radius:50%; filter:blur(180px); top:-100px; left:-100px; animation: float1 10s infinite alternate ease-in-out;"></div>
+  <div style="position:absolute; width:400px; height:400px; background: rgba(67,97,238,0.2); border-radius:50%; filter:blur(150px); bottom:-100px; right:-100px; animation: float2 12s infinite alternate ease-in-out;"></div>
 
+  <!-- Section Title -->
   <div class="container section-title text-center" data-aos="fade-up">
-    <h2 style="color:#fff; font-weight:700;">What I Do</h2>
-    <p style="font-size: 16px; color:#ddd;">“Strategic insights, automated workflows, and visual storytelling — all in one place.”</p>
+    <h2 style="color:#fff; font-weight:800; font-size:2.5rem; letter-spacing:1px; text-transform:uppercase;">What I Do</h2>
+    <p style="font-size: 17px; color:#ccc; max-width:700px; margin:auto;">Strategic insights, automated workflows, and visual storytelling — all in one place.</p>
   </div>
 
-  <div class="container">
+  <!-- Services Grid -->
+  <div class="container mt-5">
     <div class="row gy-4">
-      <!-- Service Items -->
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-        <div class="service-item position-relative">
+      
+      <!-- Service Card 1 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-bar-chart"></i></div>
           <h3>Data Analysis & Visualization</h3>
-          <p>I analyze complex data to extract actionable insights and trends.
-          I specialize in creating interactive dashboards using Power BI, Tableau, Metabase, and Excel.</p>
+          <p>I analyze complex data to extract actionable insights and trends, building interactive dashboards using Power BI, Tableau, Metabase, and Excel.</p>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-        <div class="service-item position-relative">
+      <!-- Service Card 2 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-database"></i></div>
           <h3>SQL & Database Support</h3>
-          <p>I write optimized SQL queries for reporting and data extraction from databases like MySQL and PostgreSQL. I also provide support for database management and optimization.</p>
+          <p>I write optimized SQL queries for reporting and data extraction from MySQL and PostgreSQL, plus manage and optimize database performance.</p>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-        <div class="service-item position-relative">
+      <!-- Service Card 3 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-graph-up"></i></div>
           <h3>Business Intelligence Solutions</h3>
-          <p>I develop end-to-end BI solutions including automated reporting systems, KPI tracking, and performance dashboards tailored to business needs.</p>
+          <p>I develop end-to-end BI systems for KPI tracking, performance monitoring, and automated reporting tailored to business goals.</p>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-        <div class="service-item position-relative">
+      <!-- Service Card 4 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-filter"></i></div>
           <h3>Data Cleaning & Preparation</h3>
-          <p>I clean and transform raw data into analysis-ready datasets, handling missing values, normalization, and preparing datasets for modeling.</p>
+          <p>I transform raw data into analysis-ready datasets by handling missing values, outliers, and standardizing formats for modeling.</p>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-        <div class="service-item position-relative">
+      <!-- Service Card 5 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="500">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-toggles2"></i></div>
           <h3>A/B Testing & Experiment Analysis</h3>
-          <p>I help businesses make informed decisions through A/B testing, hypothesis testing, and analyzing experiment results.</p>
+          <p>I design and analyze controlled experiments and A/B tests to validate hypotheses and optimize decision-making strategies.</p>
         </div>
       </div>
 
-      <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-        <div class="service-item position-relative">
+      <!-- Service Card 6 -->
+      <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="600">
+        <div class="service-item">
           <div class="icon"><i class="bi bi-robot"></i></div>
           <h3>Machine Learning & Predictive Analytics</h3>
-          <p>I build predictive models for real-world business problems like churn prediction, customer segmentation, and trend forecasting using Python.</p>
+          <p>I build predictive models to solve real-world business challenges like churn prediction, segmentation, and trend forecasting using Python.</p>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- 🔥 Stylish CSS for Services -->
+<!-- 🌈 Stylish CSS -->
 <style>
 .service-item {
-  background: rgba(255,255,255,0.05);
-  border-radius: 20px;
-  padding: 30px 20px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 22px;
+  padding: 40px 25px;
   text-align: center;
-  color: #fff;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.1);
+  color: #000;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+.service-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(76,201,240,0.15), rgba(67,97,238,0.15));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.service-item:hover::before {
+  opacity: 1;
+}
+.service-item:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 0 30px rgba(76,201,240,0.3), 0 0 60px rgba(67,97,238,0.25);
+}
+.service-item .icon {
+  font-size: 2.8rem;
+  color: #4361ee;
+  margin-bottom: 18px;
   transition: all 0.4s ease;
   position: relative;
 }
-.service-item:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 0 30px rgba(76,201,240,0.5), 0 0 60px rgba(67,97,238,0.3);
-}
-.service-item .icon {
-  font-size: 2.5rem;
-  color: #4cc9f0;
-  margin-bottom: 15px;
-  transition: transform 0.4s ease;
-}
 .service-item:hover .icon {
-  transform: rotate(10deg) scale(1.2);
-  color: #4361ee;
+  color: #4cc9f0;
+  transform: rotate(10deg) scale(1.3);
+  text-shadow: 0 0 15px rgba(67,97,238,0.6);
 }
 .service-item h3 {
-  font-size: 1.3rem;
-  margin-bottom: 12px;
-  color: #fff;
+  font-size: 1.35rem;
+  margin-bottom: 14px;
+  font-weight: 700;
+  color: #000;
 }
 .service-item p {
   font-size: 0.95rem;
-  color: #ddd;
+  color: #000;
   text-align: justify;
+  line-height: 1.6;
 }
 
-/* Floating Animations */
+/* Floating Glow Animation */
 @keyframes float1 {
   from { transform: translateY(0px) scale(1); }
   to { transform: translateY(40px) scale(1.1); }
 }
 @keyframes float2 {
   from { transform: translateY(0px) scale(1); }
-  to { transform: translateY(50px) scale(1.05); }
+  to { transform: translateY(60px) scale(1.05); }
+}
+
+/* AOS Zoom Animation */
+[data-aos="zoom-in"] {
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.6s ease-out;
+}
+[data-aos="zoom-in"].aos-animate {
+  transform: scale(1);
+  opacity: 1;
 }
 </style>
 
 <!-- AOS Animation -->
 <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script>AOS.init({ duration: 1000, once: true, offset: 120 });</script>
+<script>AOS.init({ duration: 1200, once: true, offset: 120 });</script>
+
 
     
     
